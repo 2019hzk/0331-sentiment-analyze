@@ -94,3 +94,21 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+
+@lru_cache  # 缓存注解
+def get_settings():
+    """
+    获取配置文件类
+    :return:
+    """
+    return Settings()
+
+
+def reload_setting() -> Settings:
+    """
+    职责：情况缓存重新加载
+    :return:
+    """
+    get_settings.cache_clear()
+
+    return get_settings()

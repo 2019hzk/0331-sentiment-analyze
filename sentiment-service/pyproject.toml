@@ -28,12 +28,10 @@ dependencies = [
     "aiomysql>=0.3.2",
     "pymysql>=1.1.2",
     # 联网搜索与 HTTP 网络请求客户端
-    "tavily-python>=0.7.24",
     "requests>=2.32.5",
     "httpx>=0.28.1",
     # 报告渲染引擎、加密与 RAG/分词工具
     "mistune>=3.1",             # Markdown 文本解析与渲染
-    "cryptography>=48.0.1",     # 安全与数据加密
     "langchain-openai>=1.3.0",  # LangChain OpenAI 封装扩展
     "langchain>=1.3.9",         # 大模型链式调用基础库
     "sse-starlette>=3.4.4",     # Server-Sent Events
