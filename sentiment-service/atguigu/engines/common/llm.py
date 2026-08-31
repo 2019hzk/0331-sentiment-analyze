@@ -1,5 +1,5 @@
 import asyncio
-from typing import TypeVar
+from typing import TypeVar, Any
 
 from pydantic import BaseModel
 
@@ -106,7 +106,7 @@ class LLMClient:
         message_context = self._build_message_context(system_prompt, user_prompt)
 
         # 2. 定义模型实例
-        chat_model = self.init_model_object()
+        chat_model = self.init_model_object(is_structured=True)
 
         structured_output = chat_model.with_structured_output(structed_object, method="json_schema")
 
@@ -136,12 +136,23 @@ class LLMClient:
             HumanMessage(content=user_prompt)
         ]
 
-    def init_model_object(self) -> BaseChatModel:
+    def init_model_object(self, is_structured: bool = False) -> BaseChatModel:
+
+        # kimi-k3模型的思考模型禁用掉
+        model_name = self.model_name.lower()
+        kwargs: dict[str, Any] = {}
+        if is_structured and (model_name in "kimi" or model_name in "moonshot"):
+            kwargs['extra_body'] = {
+                "thinking": {
+                    "type": "disabled"
+                }
+            }
         return init_chat_model(
             model_provider=self.model_provider,
             model=self.model_name,
             api_key=self.api_key,
-            base_url=self.base_url
+            base_url=self.base_url,
+            **kwargs
         )
 
 
