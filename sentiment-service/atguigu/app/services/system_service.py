@@ -69,7 +69,3 @@ class SystemService:
         # 3. 重新更新配置类
         reload_setting()
 
-
-if __name__ == '__main__':
-    list_data = "abcde"
-    print(list_data[-2:])

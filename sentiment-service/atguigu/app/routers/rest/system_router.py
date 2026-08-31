@@ -16,3 +16,4 @@ def get_config_endpoint(service: SystemServiceDep):
 def update_config_endpoint(request: ConfigUpdateRequest,
                            service: SystemServiceDep):
     service.update_config(request.root)
+
