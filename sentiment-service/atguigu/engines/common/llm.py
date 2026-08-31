@@ -141,7 +141,7 @@ class LLMClient:
         # kimi-k3模型的思考模型禁用掉
         model_name = self.model_name.lower()
         kwargs: dict[str, Any] = {}
-        if is_structured and (model_name in "kimi" or model_name in "moonshot"):
+        if is_structured and (  "kimi" in model_name or   "moonshot" in model_name):
             kwargs['extra_body'] = {
                 "thinking": {
                     "type": "disabled"
