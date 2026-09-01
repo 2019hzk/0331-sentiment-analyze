@@ -4,7 +4,7 @@ from typing import Awaitable
 from atguigu.engines.common.llm import LLMClient
 from atguigu.engines.common.logger import router_by_role_log
 from atguigu.engines.contract.agent_role import AgentInfoRoleKey
-from atguigu.engines.insight.agent import insight_agent_invoker
+from atguigu.engines.insight_agent.agent import insight_agent_invoker
 from atguigu.engines.media.media import media_agent_invoker
 from atguigu.engines.common.task_manager import task_manager
 from atguigu.engines.common.report import get_report_dir
@@ -16,7 +16,7 @@ class OrchestratorResearchAgent:
 
     def __init__(self):
         self.agent_invoker: dict[AgentInfoRoleKey, AGENT_INVOKER] = {
-            "insight": insight_agent_invoker,
+            "insight_agent": insight_agent_invoker,
             "media": media_agent_invoker
         }
 

@@ -157,7 +157,7 @@ class LLMClient:
 
 
 async def main_test():
-    llm_client = LLMClient.from_role(role="insight")
+    llm_client = LLMClient.from_role(role="insight_agent")
 
     llm_result = await  llm_client.generate_text(system_prompt="你是一个大语言模型专家",
                                                  user_prompt="请你给我解释LangChain以及LangGraph是什么以及都有哪些使用场景?")
