@@ -5,7 +5,7 @@ from atguigu.engines.common.llm import LLMClient
 from atguigu.engines.common.logger import router_by_role_log
 from atguigu.engines.contract.agent_role import AgentInfoRoleKey
 from atguigu.engines.insight_agent.agent import insight_agent_invoker
-from atguigu.engines.media.media import media_agent_invoker
+from atguigu.engines.media_agent.media import media_agent_invoker
 from atguigu.engines.common.task_manager import task_manager
 from atguigu.engines.common.report import get_report_dir
 

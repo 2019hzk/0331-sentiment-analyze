@@ -8,8 +8,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 PROJECT_ROOT: Path = Path(__file__).resolve().parents[3]
 ENV_FILE: str = str(PROJECT_ROOT / ".env")
 
-print(ENV_FILE)
-
 
 class Settings(BaseSettings):
     """全局配置(.env 加载的服务/模型/检索参数)"""

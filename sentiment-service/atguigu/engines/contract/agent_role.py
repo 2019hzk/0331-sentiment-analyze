@@ -19,3 +19,8 @@ AGENT_ROLE_INFOS: dict[AgentInfoRoleKey, AgentRoleInfo] = {
     "host": AgentRoleInfo(display_name="主持人研判专家", config_prefix="HOST_AGENT"),
     "report": AgentRoleInfo(display_name="综合报告引擎", config_prefix="REPORT_ENGINE")
 }
+
+
+def display_agent_name(role_key: AgentInfoRoleKey) -> str:
+    """返回角色的中文展示名"""
+    return AGENT_ROLE_INFOS[role_key].display_name
