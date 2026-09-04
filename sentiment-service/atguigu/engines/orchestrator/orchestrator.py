@@ -16,7 +16,7 @@ class OrchestratorResearchAgent:
 
     def __init__(self):
         self.agent_invoker: dict[AgentInfoRoleKey, AGENT_INVOKER] = {
-            "insight_agent": insight_agent_invoker,
+            "insight": insight_agent_invoker,
             "media": media_agent_invoker
         }
 
