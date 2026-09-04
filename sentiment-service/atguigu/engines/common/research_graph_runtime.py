@@ -12,6 +12,7 @@ from atguigu.engines.contract.agent_role import AgentInfoRoleKey
 class ResearchRunContext:
     """单次 Insight/Media 研究运行所需的共享依赖与元数据"""
     task_id: str
+    query:str
     role: AgentInfoRoleKey
     llm_client: LLMClient
     output_dir: str

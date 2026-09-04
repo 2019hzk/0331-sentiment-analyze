@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Literal
 
-AgentInfoRoleKey = Literal["insight_agent", "media", "host", "report"]
+AgentInfoRoleKey = Literal["insight", "media", "host", "report"]
 
 
 @dataclass(slots=True)
@@ -14,7 +14,7 @@ class AgentRoleInfo:
 
 
 AGENT_ROLE_INFOS: dict[AgentInfoRoleKey, AgentRoleInfo] = {
-    "insight_agent": AgentRoleInfo(display_name="私域检索专家", config_prefix="INSIGHT_AGENT"),
+    "insight": AgentRoleInfo(display_name="私域检索专家", config_prefix="INSIGHT_AGENT"),
     "media": AgentRoleInfo(display_name="公域检索专家", config_prefix="MEDIA_AGENT"),
     "host": AgentRoleInfo(display_name="主持人研判专家", config_prefix="HOST_AGENT"),
     "report": AgentRoleInfo(display_name="综合报告引擎", config_prefix="REPORT_ENGINE")
