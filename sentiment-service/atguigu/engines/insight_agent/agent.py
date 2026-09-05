@@ -1,6 +1,7 @@
 import asyncio
 
 from atguigu.engines.common.llm import LLMClient
+from atguigu.engines.common.report import get_report_dir
 from atguigu.engines.common.research_graph_runtime import ResearchRunContext, invoke_research_graph
 from atguigu.engines.contract.agent_role import AgentInfoRoleKey
 from atguigu.engines.contract.settings import get_settings
@@ -40,7 +41,7 @@ async def main_test():
                                 task_id="1234_test",
                                 query="高考",
                                 llm_client=LLMClient.from_role("insight"),
-                                output_dir=get_settings().RUNTIME_DIR
+                                output_dir=get_report_dir("1234_test","insight")
                                 )
 
 
