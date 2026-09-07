@@ -7,6 +7,7 @@ from langchain_core.prompts import PromptTemplate
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode
 from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.events import publish_section_ready
 from atguigu.engines.contract.evidence import build_evidence_context, EvidenceContext, EvidenceRecord
 from atguigu.engines.contract.section_definitions import find_section_definition
 from atguigu.engines.prompts.shared import SECTION_SUMMARY_USER_PROMPT
@@ -47,7 +48,7 @@ class BaseSectionSummaryNode(ResearchNode):
                 evidence_context,
             )
 
-        # TODO 发布章节摘要
+        publish_section_ready(state, section)
 
         sections[cursor] = section
         return {"sections": sections, "cursor": cursor + 1}

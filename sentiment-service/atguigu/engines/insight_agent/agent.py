@@ -33,7 +33,7 @@ async def insight_agent_invoker(role: AgentInfoRoleKey,
         llm_client=llm_client,
         output_dir=output_dir
     )
-    await invoke_research_graph(build_insight_graph(context), query)
+    await invoke_research_graph(context,build_insight_graph(context), query)
 
 
 async def main_test():
