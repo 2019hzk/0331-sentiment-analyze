@@ -1,0 +1,87 @@
+import json
+from typing import Any
+
+from loguru import logger
+
+from atguigu.engines.common.report import get_report_dir, save_report
+from atguigu.engines.contract.agent_role import  display_agent_name
+from atguigu.engines.host_agent.discussion_events import (
+    build_agent_discussion_event,
+    build_judgement_discussion_event
+)
+from atguigu.engines.host_agent.models import AgentSectionOutput
+from atguigu.engines.host_agent.section_judge import HostSectionJudge
+from atguigu.engines.host_agent.state import HostState
+
+
+class HostNodes:
+    """Host LangGraph 的章节收集、研判、记录与持久化节点"""
+
+    def __init__(self, section_judge: HostSectionJudge):
+        """初始化 Host 节点并保存章节研判器"""
+        self._section_judge = section_judge
+
+    async def collect_agent_output(self, state: HostState) -> dict[str, Any]:
+        """保存当前 Agent 章节输出并生成对应讨论事件"""
+        agent_output = AgentSectionOutput.from_section_ready_event(
+            state["event_payload"]
+        )
+        state["section_pair_store"].store_output(agent_output)
+        discussion_events = [
+            build_agent_discussion_event(state["task_id"], agent_output)
+        ]
+        return {
+            "section_pair_store": state["section_pair_store"],
+            "discussion_events": discussion_events
+        }
+
+    async def generate_section_judgement(
+            self,
+            state: HostState
+    ) -> dict[str, Any]:
+        """调用 Host LLM 为当前已齐备章节生成结构化研判"""
+        section_pair = state["section_pair_store"].get_ready_pair()
+        logger.info(f"【{display_agent_name('host')}】双Agent章节已齐备,开始研判 章节={section_pair.section_key}")
+        section_judgement = await self._section_judge.judge_section(section_pair)
+        return {"section_judgement": section_judgement}
+
+    async def apply_section_judgement(
+            self,
+            state: HostState
+    ) -> dict[str, Any]:
+        """将章节研判应用到 Host 状态并生成讨论事件"""
+        section_judgement = state["section_judgement"]
+
+        state["section_pair_store"].mark_judged(section_judgement.section_key)
+
+        judgements = [*state["judgements"], section_judgement]
+        discussion_events = [
+            *state["discussion_events"],
+            build_judgement_discussion_event(
+                state["task_id"],
+                section_judgement
+            )
+        ]
+        logger.info(f"【{display_agent_name('host')}】章节研判完成 章节={section_judgement.section_key}")
+        return {
+            "section_pair_store": state["section_pair_store"],
+            "judgements": judgements,
+            "discussion_events": discussion_events
+        }
+
+    async def save_judgements(self, state: HostState) -> dict[str, Any]:
+        """保存 Host 结构化研判"""
+        output_dir = get_report_dir(state["task_id"], "host")
+
+        structured_content = json.dumps(
+            [judgement.model_dump() for judgement in state["judgements"]],
+            ensure_ascii=False,
+            indent=2
+        )
+        json_path = save_report(
+            output_dir,
+            "judgements.json",
+            structured_content
+        )
+        logger.info(f"Host 结构化研判已保存 {json_path}")
+        return {}
