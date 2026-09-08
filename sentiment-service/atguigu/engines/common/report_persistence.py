@@ -1,6 +1,6 @@
 from typing import Any
 
-from  loguru import  logger
+from loguru import logger
 
 from atguigu.engines.common.report import save_report
 from atguigu.engines.common.research_graph_runtime import ResearchNode
@@ -14,7 +14,7 @@ class ReportPersistenceNode(ResearchNode):
     async def __call__(self, state: ResearchGraphState[Any]) -> dict[str, Any]:
         """将研究状态中的独立报告保存到文件"""
         agent_name = display_agent_name(self.context.role)
-
+        self.context.report_progress("completed", f"{agent_name} 开始保存独立报告", 90)
         final_report = state["final_report"]
 
         md_path = save_report(
@@ -22,6 +22,6 @@ class ReportPersistenceNode(ResearchNode):
             "report.md",
             final_report
         )
-
         logger.info(f"【{agent_name}】报告落盘完成: {md_path}")
+        self.context.report_progress("completed", f"{agent_name} 独立报告保存完成", 100)
         return {}

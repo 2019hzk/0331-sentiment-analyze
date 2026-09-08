@@ -25,7 +25,7 @@ class BaseSectionSummaryNode(ResearchNode):
 
         """按游标取证据包生成章节正文并发布就绪事件"""
         agent_name = display_agent_name(self.context.role)
-        logger.info(f"{agent_name} 开始初始化固定章节并为各章节选择、排序和截取证据。")
+        self.context.report_progress("summary", f"{agent_name} 开始生成章节摘要", 50)
 
         cursor = state.get("cursor", 0)
         sections = list(state.get("sections"))
@@ -48,8 +48,8 @@ class BaseSectionSummaryNode(ResearchNode):
                 evidence_context,
             )
 
-        publish_section_ready(state, section)
-
+        publish_section_ready(section, self.context.role, self.context.task_id)
+        self.context.report_progress("summary", f"{agent_name} 生成章节摘要完成", 60)
         sections[cursor] = section
         return {"sections": sections, "cursor": cursor + 1}
 

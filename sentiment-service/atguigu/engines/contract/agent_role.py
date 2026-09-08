@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 AgentInfoRoleKey = Literal["insight", "media", "host", "report"]
-
+RESEARCH_ROLE_KEYS: tuple[AgentInfoRoleKey, ...] = ("insight", "media")
 
 @dataclass(slots=True)
 class AgentRoleInfo:

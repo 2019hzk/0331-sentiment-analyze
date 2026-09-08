@@ -17,7 +17,7 @@ class ReportGenerationNode(ResearchNode):
         """调用整合研究状态中的章节并生成独立报告"""
 
         agent_name = display_agent_name(self.context.role)
-        logger.info(f"{agent_name} 开始将章节正文整合为独立研究报告")
+        self.context.report_progress("generating", f"{agent_name} 开始生成独立报告", 70)
 
         query = self.context.query
         sections = state["sections"]
@@ -29,7 +29,7 @@ class ReportGenerationNode(ResearchNode):
         )
 
         report_md = await self._generate_report(report_context, query)
-        logger.info(f"{agent_name} 章节正文整合为独立研究报告完成")
+        self.context.report_progress("generating", f"{agent_name} 独立报告生成完成", 80)
         return {"final_report": report_md}
 
     async def _generate_report(self, report_context: str, query: str) -> str:

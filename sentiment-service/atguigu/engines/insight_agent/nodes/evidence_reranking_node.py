@@ -1,9 +1,7 @@
 from typing import Any
-from loguru import logger
 from atguigu.engines.common.research_graph_runtime import ResearchNode
 from atguigu.engines.contract.evidence import EvidenceRecord, RetrievalMeta
 from atguigu.engines.insight_agent.state import InsightState
-from atguigu.engines.contract.agent_role import display_agent_name
 
 
 class EvidenceRerankingNode(ResearchNode):
@@ -11,10 +9,6 @@ class EvidenceRerankingNode(ResearchNode):
 
     async def __call__(self, state: InsightState) -> dict[str, Any]:
         """合并重复召回结果、计算排名分数并构建证据索引"""
-        agent_name = display_agent_name(self.context.role)
-        logger.info(f"{agent_name} 开始进行去重、重排序")
-
-
         merged_records = _dedupe_and_merge(state.get('retrieved_records'))
         rerank_scores: dict[str, float] = _calculate_rerank_scores(merged_records)
 
@@ -23,7 +17,6 @@ class EvidenceRerankingNode(ResearchNode):
             key=lambda record: rerank_scores.get(record.id),
             reverse=True,
         )
-        logger.info(f"{agent_name} 去重、重排序完成")
         return {
             "records_by_id": {record.id: record for record in ordered_records},
             "rerank_scores": rerank_scores

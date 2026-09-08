@@ -2,20 +2,36 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any, Mapping, Callable
 from atguigu.engines.common.llm import LLMClient
 from atguigu.engines.contract.agent_role import AgentInfoRoleKey
 
+
+@dataclass(slots=True)
+class ProgressUpdate:
+    """节点进度更新载荷"""
+
+    status: str
+    message: str
+    progress_pct: int
+
+
+ProgressCallback = Callable[[ProgressUpdate], None]
 
 
 @dataclass(slots=True)
 class ResearchRunContext:
     """单次 Insight/Media 研究运行所需的共享依赖与元数据"""
     task_id: str
-    query:str
+    query: str
     role: AgentInfoRoleKey
     llm_client: LLMClient
     output_dir: str
+    progress_callback: ProgressCallback
+
+    def report_progress(self, status: str, message: str, pct: int) -> None:
+        """存在回调时上报当前节点执行进度"""
+        self.progress_callback(ProgressUpdate(status, message, pct))
 
 
 class ResearchNode(ABC):

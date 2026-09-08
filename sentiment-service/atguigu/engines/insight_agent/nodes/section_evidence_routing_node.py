@@ -3,9 +3,7 @@ from functools import lru_cache
 from typing import Any
 
 import numpy as np
-from loguru import logger
 from atguigu.engines.common.research_graph_runtime import ResearchNode
-from atguigu.engines.contract.agent_role import display_agent_name
 from atguigu.engines.contract.evidence import EvidenceRecord
 from atguigu.engines.contract.section_definitions import get_insight_routing_rules, SECTION_DEFINITIONS
 from atguigu.engines.contract.settings import get_settings
@@ -17,9 +15,6 @@ class SectionEvidenceRoutingNode(ResearchNode):
 
     async def __call__(self, state: InsightState) -> dict[str, Any]:
         """根据配置选择规则或语义方式路由证据"""
-        agent_name = display_agent_name(self.context.role)
-        logger.info(f"{agent_name} 开始为章节选择证据")
-
 
         records = list(state.get("records_by_id").values())
         if _is_semantic_enabled(records):
@@ -27,7 +22,6 @@ class SectionEvidenceRoutingNode(ResearchNode):
         else:
             section_record_ids = _route_by_rules(records)
 
-        logger.info(f"{agent_name} 章节候选证据完成")
         return {"section_record_ids": section_record_ids}
 
 

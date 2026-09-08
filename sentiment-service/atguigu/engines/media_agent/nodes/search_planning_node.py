@@ -1,6 +1,5 @@
 import json
 from typing import Any
-from loguru import logger
 from langchain_core.prompts import PromptTemplate
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode
@@ -24,7 +23,8 @@ class SearchPlanningNode(ResearchNode):
     async def __call__(self, state: MediaState) -> dict[str, Any]:
         """调用 LLM 生成搜索策略，并与固定章节定义合并为运行状态"""
         agent_name = display_agent_name(self.context.role)
-        logger.info(f"【{agent_name}】开始执行公域信息搜索")
+        self.context.report_progress("planning", f"{agent_name} 开始规划公域搜索策略", 10)
+
         planned = await self._generate_search_plan(self.context.query)
 
         sections: list[MediaSectionState] = [
@@ -40,7 +40,7 @@ class SearchPlanningNode(ResearchNode):
             )
         ]
 
-        logger.info(f"【{agent_name}】执行公域信息搜索完成")
+        self.context.report_progress("planning", f"{agent_name} 公域搜索策略规划完成", 20)
         return {"sections": sections}
 
     async def _generate_search_plan(

@@ -1,5 +1,4 @@
 from typing import Any, Mapping
-from loguru import logger
 from atguigu.engines.common.research_graph_runtime import ResearchNode
 from atguigu.engines.contract.agent_role import display_agent_name
 from atguigu.engines.contract.evidence import EvidenceRecord
@@ -14,7 +13,7 @@ class SectionPreparationNode(ResearchNode):
     async def __call__(self, state: InsightState) -> dict[str, Any]:
         """生成固定章节状态及供摘要节点消费的章节证据列表"""
         agent_name = display_agent_name(self.context.role)
-        logger.info(f"{agent_name} 开始初始化固定章节并为各章节选择、排序和截取证据。")
+        self.context.report_progress("planning", f"{agent_name} 开始固定章节与证据准备", 30)
 
         records_by_id = state.get("records_by_id")
         section_record_ids = state.get("section_record_ids")
@@ -36,7 +35,7 @@ class SectionPreparationNode(ResearchNode):
                     rerank_scores
                 )[:20]
             )
-        logger.info(f"{agent_name} 初始化固定章节并为各章节选择、排序和截取证据完成")
+        self.context.report_progress("planning", f"{agent_name} 固定章节与证据准备完成", 40)
 
         return {
             "sections": sections,

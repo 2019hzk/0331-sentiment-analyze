@@ -4,7 +4,7 @@ from typing import Any, Callable, Literal, Mapping
 from loguru import logger
 from pydantic import BaseModel
 
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import display_agent_name, AgentRoleInfo, AgentInfoRoleKey
 
 
 class EventType(str, Enum):
@@ -12,7 +12,28 @@ class EventType(str, Enum):
 
     SECTION_READY = "section_ready"
     HOST_DISCUSSION_MESSAGE = "host_discussion_message"
+    ROLE_PROGRESS = "role_progress"
+    ROLE_ERROR = "role_error"
+    ROLE_RESULT = "role_result"
 
+
+class RoleProgressEvent(BaseModel):
+    task_id: str
+    role: str
+    status: str
+    message: str
+    progress_pct: int = 0
+
+
+class RoleResultEvent(BaseModel):
+    task_id: str
+    role: str
+
+
+class RoleErrorEvent(BaseModel):
+    task_id: str
+    role: str
+    error: str
 
 
 class SectionReadyEvent(BaseModel):
@@ -53,17 +74,30 @@ def unsubscribe(callback: EventCallback):
         subscribers.discard(callback)
 
 
+def publish_role_progress(event: RoleProgressEvent):
+    """发布角色研究进度事件"""
+    publish(EventType.ROLE_PROGRESS, event.model_dump())
+
+
+def publish_role_result(event: RoleResultEvent):
+    """发布角色研究结果事件"""
+    publish(EventType.ROLE_RESULT, event.model_dump())
+
+
+def publish_role_error(event: RoleErrorEvent):
+    """发布角色研究错误事件"""
+    publish(EventType.ROLE_ERROR, event.model_dump())
 
 
 def publish_section_ready(
-        state: Mapping[str, Any],
-        section: Mapping[str, Any]
+        section: Mapping[str, Any],
+        role: AgentInfoRoleKey,
+        task_id: str
 ):
     """从研究 Agent 图状态构造并发布章节就绪事件"""
-    role = state["role"]
     agent_name = display_agent_name(role)
     event = SectionReadyEvent(
-        task_id=state["task_id"],
+        task_id=task_id,
         source=role,
         section_key=section["section_key"],
         body=section.get("body")

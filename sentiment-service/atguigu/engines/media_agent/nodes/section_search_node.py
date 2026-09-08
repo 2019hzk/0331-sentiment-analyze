@@ -1,7 +1,7 @@
 import asyncio
 from itertools import zip_longest
 from typing import Any
-from loguru import logger
+
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode, ResearchRunContext
 from atguigu.engines.contract.agent_role import display_agent_name
@@ -21,7 +21,7 @@ class SearchNode(ResearchNode):
     async def __call__(self, state: MediaState) -> dict[str, Any]:
         """遍历章节执行检索并去重产出证据池"""
         agent_name = display_agent_name(self.context.role)
-        logger.info(f"{agent_name} 开始执行公域信息搜索")
+        self.context.report_progress("searching", f"{agent_name} 开始执行公域信息搜索", 30)
 
         query = self.context.query
         sections: list[MediaSectionState] = state.get("sections")
@@ -43,7 +43,7 @@ class SearchNode(ResearchNode):
             section_queries.append(
                 "\n".join([f"{search_query}" for search_query in queries])
             )
-        logger.info(f"{agent_name} 执行公域信息搜索完成")
+        self.context.report_progress("searching", f"{agent_name} 执行公域信息搜索完成", 40)
         return {
             "section_evidence_records": section_evidence_records,
             "section_queries": section_queries
