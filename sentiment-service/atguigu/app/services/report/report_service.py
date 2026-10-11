@@ -40,7 +40,7 @@ class ReportService:
         )
 
         # 2. 丢到后台事件循环中异步执行生成逻辑(纳入统一任务登记)
-        task_manager.submit_task(self._run_report_generation(generation))
+        task_manager.create_background_task(self._run_report_generation(generation))
 
         # 3. 立即返回生成记录供前端轮询
         return generation

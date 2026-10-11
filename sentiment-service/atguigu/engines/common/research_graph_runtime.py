@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Mapping, Callable
 from atguigu.engines.common.llm import LLMClient
-from atguigu.engines.contract.agent_role import AgentInfoRoleKey
+from atguigu.engines.contract.agent_role import RoleId
 
 
 @dataclass(slots=True)
@@ -24,7 +24,7 @@ class ResearchRunContext:
     """单次 Insight/Media 研究运行所需的共享依赖与元数据"""
     task_id: str
     query: str
-    role: AgentInfoRoleKey
+    role: RoleId
     llm_client: LLMClient
     output_dir: str
     progress_callback: ProgressCallback

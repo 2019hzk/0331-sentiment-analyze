@@ -1,12 +1,12 @@
 from atguigu.engines.common.llm import LLMClient
 
 from atguigu.engines.common.research_graph_runtime import ResearchRunContext, invoke_research_graph, ProgressCallback
-from atguigu.engines.contract.agent_role import AgentInfoRoleKey
+from atguigu.engines.contract.agent_role import RoleId
 from atguigu.engines.insight_agent.graph import build_insight_graph
 
 
 
-async def insight_agent_invoker(role: AgentInfoRoleKey,
+async def insight_agent_invoker(role: RoleId,
                                 task_id: str,
                                 query: str,
                                 llm_client: LLMClient,

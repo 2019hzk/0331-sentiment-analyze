@@ -6,7 +6,7 @@ from loguru import logger
 from langchain_core.prompts import PromptTemplate
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import get_role_display_name
 from atguigu.engines.contract.events import publish_section_ready
 from atguigu.engines.contract.evidence import build_evidence_context, EvidenceContext, EvidenceRecord
 from atguigu.engines.contract.section_definitions import find_section_definition
@@ -24,7 +24,7 @@ class BaseSectionSummaryNode(ResearchNode):
         """按游标取证据包生成章节正文并发布就绪事件"""
 
         """按游标取证据包生成章节正文并发布就绪事件"""
-        agent_name = display_agent_name(self.context.role)
+        agent_name = get_role_display_name(self.context.role)
         self.context.report_progress("summary", f"{agent_name} 开始生成章节摘要", 50)
 
         cursor = state.get("cursor", 0)

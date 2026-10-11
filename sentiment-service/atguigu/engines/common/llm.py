@@ -8,7 +8,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.language_models import BaseChatModel
 
 from atguigu.engines.common.retries import with_retry
-from atguigu.engines.contract.agent_role import AgentInfoRoleKey, AGENT_ROLE_INFOS
+from atguigu.engines.contract.agent_role import RoleId, ROLE_METADATA
 from atguigu.engines.contract.settings import get_settings
 
 T = TypeVar("T", bound=BaseModel)
@@ -31,7 +31,7 @@ class LLMClient:
         self.base_url = base_url
 
     @classmethod
-    def from_role(cls, role: AgentInfoRoleKey) -> "LLMClient":
+    def from_role(cls, role: RoleId) -> "LLMClient":
         """
         职责： 根据不同角色获取到对应的模型提供商客户端
         :param role:
@@ -42,14 +42,14 @@ class LLMClient:
         settings = get_settings()
 
         # 2. 获取Agent的配置信息前缀
-        config_prefix = AGENT_ROLE_INFOS[role].config_prefix
+        llm_config_prefix = ROLE_METADATA[role].llm_config_prefix
 
         # 3. 创建LLMClient
         return cls(
-            model_name=getattr(settings, f"{config_prefix}_MODEL_NAME"),
-            model_provider=getattr(settings, f"{config_prefix}_MODEL_PROVIDER"),
-            api_key=getattr(settings, f"{config_prefix}_API_KEY"),
-            base_url=getattr(settings, f"{config_prefix}_BASE_URL")
+            model_name=getattr(settings, f"{llm_config_prefix}_MODEL_NAME"),
+            model_provider=getattr(settings, f"{llm_config_prefix}_MODEL_PROVIDER"),
+            api_key=getattr(settings, f"{llm_config_prefix}_API_KEY"),
+            base_url=getattr(settings, f"{llm_config_prefix}_BASE_URL")
         )
 
     @with_retry

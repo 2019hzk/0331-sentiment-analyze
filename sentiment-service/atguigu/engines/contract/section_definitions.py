@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from atguigu.engines.contract.agent_role import AgentInfoRoleKey
+from atguigu.engines.contract.agent_role import RoleId
 
 
 @dataclass(slots=True)
@@ -15,7 +15,7 @@ class SectionDefinition:
     media_section_guidance: str
     insight_routing_keywords: tuple[str, ...] = ()
 
-    def section_guidance_for(self, role: AgentInfoRoleKey) -> str:
+    def section_guidance_for(self, role: RoleId) -> str:
         """返回研究角色对应的章节写作指导"""
         if role == "insight":
             return self.insight_section_guidance
@@ -174,7 +174,7 @@ def find_section_definition(key: str) -> SectionDefinition | None:
     return SECTION_DEFINITIONS.get(key)
 
 
-def get_section_definitions_for_role(role: AgentInfoRoleKey) -> list[dict[str, str]]:
+def get_section_definitions_for_role(role: RoleId) -> list[dict[str, str]]:
     """返回指定研究角色的固定章节与规划指导"""
     return [
         {

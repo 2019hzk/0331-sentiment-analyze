@@ -4,7 +4,7 @@ from typing import Any
 
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode, ResearchRunContext
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import get_role_display_name
 from atguigu.engines.contract.evidence import EvidenceRecord
 from atguigu.engines.media_agent.state import MediaSectionState, MediaState
 from atguigu.engines.media_agent.web_search.retrieval_service import MediaRetrievalService
@@ -20,7 +20,7 @@ class SearchNode(ResearchNode):
 
     async def __call__(self, state: MediaState) -> dict[str, Any]:
         """遍历章节执行检索并去重产出证据池"""
-        agent_name = display_agent_name(self.context.role)
+        agent_name = get_role_display_name(self.context.role)
         self.context.report_progress("searching", f"{agent_name} 开始执行公域信息搜索", 30)
 
         query = self.context.query

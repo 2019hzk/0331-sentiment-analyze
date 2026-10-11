@@ -20,25 +20,18 @@ def router_by_role_log(role: str):
     settings = get_settings()
     log_dir = Path(settings.LOG_DIR)
 
-    with logger.contextualize(role=role):
-        log_dir.mkdir(parents=True, exist_ok=True)
-        handler_id = logger.add(
-            str(Path(log_dir) / f"{role}.log"),
-            format="{time:YYYY-MM-DD HH:mm:ss} | {level} | [{extra[role]}] {name} - {message}",
-            level="INFO",
-            encoding="utf-8",
-            rotation="1 MB",
-            filter=lambda record: record["extra"].get("role") == role,
-        )
+    log_dir.mkdir(parents=True, exist_ok=True)
+    handler_id = logger.add(
+        str(Path(log_dir) / f"{role}.log"),
+        format="{time:YYYY-MM-DD HH:mm:ss} | {level} | [{extra[role]}] {name} - {message}",
+        level="INFO",
+        encoding="utf-8",
+        rotation="1 MB",
+        filter=lambda record: record["extra"].get("role") == role
+    )
+    try:
         yield
+    finally:
         logger.remove(handler_id)
-
-
-
-
-
-
-
-
 
 

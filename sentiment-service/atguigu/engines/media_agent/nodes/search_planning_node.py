@@ -3,7 +3,7 @@ from typing import Any
 from langchain_core.prompts import PromptTemplate
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import get_role_display_name
 from atguigu.engines.contract.section_definitions import (
     SECTION_DEFINITIONS,
     get_section_definitions_for_role
@@ -22,7 +22,7 @@ class SearchPlanningNode(ResearchNode):
 
     async def __call__(self, state: MediaState) -> dict[str, Any]:
         """调用 LLM 生成搜索策略，并与固定章节定义合并为运行状态"""
-        agent_name = display_agent_name(self.context.role)
+        agent_name = get_role_display_name(self.context.role)
         self.context.report_progress("planning", f"{agent_name} 开始规划公域搜索策略", 10)
 
         planned = await self._generate_search_plan(self.context.query)

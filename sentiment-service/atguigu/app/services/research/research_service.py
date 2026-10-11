@@ -1,14 +1,14 @@
 from pathlib import Path
 
 from atguigu.engines.common.report import get_report_dir
-from atguigu.engines.contract.agent_role import RESEARCH_ROLE_KEYS
-from atguigu.engines.orchestrator.orchestrator import OrchestratorResearchAgent
+from atguigu.engines.contract.agent_role import RESEARCH_AGENT_IDS
+from atguigu.engines.orchestrator.orchestrator import Orchestrator
 from atguigu.engines.common.task_manager import task_manager
 
 
 class ResearchService:
     def __init__(self):
-        self.orchestrator = OrchestratorResearchAgent()
+        self.orchestrator = Orchestrator()
 
     def research(self, query: str) -> str:
         """
@@ -36,7 +36,7 @@ class ResearchService:
 
         # 2. 遍历各个研究角色，读取已生成的 Markdown 报告文件内容
         research_results: dict[str, str] = {}
-        for role in RESEARCH_ROLE_KEYS:
+        for role in RESEARCH_AGENT_IDS:
             report_file = Path(get_report_dir(task_id, role)) / "report.md"
             if not report_file.exists():
                 continue

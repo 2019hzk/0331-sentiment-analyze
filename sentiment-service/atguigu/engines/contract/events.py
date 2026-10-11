@@ -4,7 +4,7 @@ from typing import Any, Callable, Literal, Mapping
 from loguru import logger
 from pydantic import BaseModel
 
-from atguigu.engines.contract.agent_role import display_agent_name, AgentRoleInfo, AgentInfoRoleKey
+from atguigu.engines.contract.agent_role import get_role_display_name, RoleId
 
 
 class EventType(str, Enum):
@@ -91,11 +91,11 @@ def publish_role_error(event: RoleErrorEvent):
 
 def publish_section_ready(
         section: Mapping[str, Any],
-        role: AgentInfoRoleKey,
+        role: RoleId,
         task_id: str
 ):
     """从研究 Agent 图状态构造并发布章节就绪事件"""
-    agent_name = display_agent_name(role)
+    agent_name = get_role_display_name(role)
     event = SectionReadyEvent(
         task_id=task_id,
         source=role,

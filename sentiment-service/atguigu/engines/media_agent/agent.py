@@ -2,11 +2,11 @@
 
 from atguigu.engines.common.llm import LLMClient
 from atguigu.engines.common.research_graph_runtime import ResearchRunContext, invoke_research_graph, ProgressCallback
-from atguigu.engines.contract.agent_role import AgentInfoRoleKey
+from atguigu.engines.contract.agent_role import RoleId
 from atguigu.engines.media_agent.graph import build_graph
 
 
-async def media_agent_invoker(role: AgentInfoRoleKey,
+async def media_agent_invoker(role: RoleId,
                               task_id: str,
                               query: str,
                               llm_client: LLMClient,

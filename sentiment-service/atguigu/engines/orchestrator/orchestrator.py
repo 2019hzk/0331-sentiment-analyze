@@ -4,7 +4,7 @@ from typing import Awaitable
 from atguigu.engines.common.llm import LLMClient
 from atguigu.engines.common.logger import router_by_role_log
 from atguigu.engines.common.research_graph_runtime import ProgressCallback, ProgressUpdate
-from atguigu.engines.contract.agent_role import AgentInfoRoleKey
+from atguigu.engines.contract.agent_role import RESEARCH_AGENT_IDS, RoleId
 from atguigu.engines.contract.events import publish_role_progress, RoleProgressEvent, publish_role_error, \
     RoleErrorEvent, RoleResultEvent, publish_role_result
 from atguigu.engines.insight_agent.agent import insight_agent_invoker
@@ -13,13 +13,12 @@ from atguigu.engines.common.task_manager import task_manager
 from atguigu.engines.common.report import get_report_dir
 from loguru import logger
 
-AGENT_INVOKER = Callable[[AgentInfoRoleKey, str, str, LLMClient, str, ProgressCallback], Awaitable[None]]
+AGENT_INVOKER = Callable[[RoleId, str, str, LLMClient, str, ProgressCallback], Awaitable[None]]
 
-
-class OrchestratorResearchAgent:
+class Orchestrator:
 
     def __init__(self):
-        self.agent_invoker: dict[AgentInfoRoleKey, AGENT_INVOKER] = {
+        self.agent_invoker: dict[RoleId, AGENT_INVOKER] = {
             "insight": insight_agent_invoker,
             "media": media_agent_invoker
         }
@@ -35,10 +34,10 @@ class OrchestratorResearchAgent:
         :return:
         """
 
-        for agent_role in self.agent_invoker.keys():
-            task_manager.submit_task(self.execute_research_task(task_id, query, agent_role))
+        for agent_role in RESEARCH_AGENT_IDS:
+            task_manager.create_background_task(self.execute_research_task(task_id, query, agent_role))
 
-    async def execute_research_task(self, task_id: str, query: str, role: AgentInfoRoleKey):
+    async def execute_research_task(self, task_id: str, query: str, role: RoleId):
         with router_by_role_log(role):
             self._publish_progress(
                 task_id,
@@ -73,7 +72,7 @@ class OrchestratorResearchAgent:
 
     @staticmethod
     def _publish_progress(
-            task_id: str, role: AgentInfoRoleKey, update: ProgressUpdate
+            task_id: str, role: RoleId, update: ProgressUpdate
     ) -> None:
         """发布指定研究角色的进度事件。"""
         publish_role_progress(

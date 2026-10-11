@@ -7,7 +7,7 @@ from langchain_core.prompts import PromptTemplate
 
 from atguigu.engines.common.research_graph_runtime import ResearchNode
 from atguigu.engines.contract.research_graph_state import ResearchGraphState
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import get_role_display_name
 
 
 class ReportGenerationNode(ResearchNode):
@@ -16,7 +16,7 @@ class ReportGenerationNode(ResearchNode):
     async def __call__(self, state: ResearchGraphState[Any]) -> dict[str, Any]:
         """调用整合研究状态中的章节并生成独立报告"""
 
-        agent_name = display_agent_name(self.context.role)
+        agent_name = get_role_display_name(self.context.role)
         self.context.report_progress("generating", f"{agent_name} 开始生成独立报告", 70)
 
         query = self.context.query

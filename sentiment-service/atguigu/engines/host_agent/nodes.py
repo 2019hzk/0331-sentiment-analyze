@@ -4,7 +4,7 @@ from typing import Any
 from loguru import logger
 
 from atguigu.engines.common.report import get_report_dir, save_report
-from atguigu.engines.contract.agent_role import  display_agent_name
+from atguigu.engines.contract.agent_role import  get_role_display_name
 from atguigu.engines.host_agent.discussion_events import (
     build_agent_discussion_event,
     build_judgement_discussion_event
@@ -41,7 +41,7 @@ class HostNodes:
     ) -> dict[str, Any]:
         """调用 Host LLM 为当前已齐备章节生成结构化研判"""
         section_pair = state["section_pair_store"].get_ready_pair()
-        logger.info(f"【{display_agent_name('host')}】双Agent章节已齐备,开始研判 章节={section_pair.section_key}")
+        logger.info(f"【{get_role_display_name('host')}】双Agent章节已齐备,开始研判 章节={section_pair.section_key}")
         section_judgement = await self._section_judge.judge_section(section_pair)
         return {"section_judgement": section_judgement}
 
@@ -62,7 +62,7 @@ class HostNodes:
                 section_judgement
             )
         ]
-        logger.info(f"【{display_agent_name('host')}】章节研判完成 章节={section_judgement.section_key}")
+        logger.info(f"【{get_role_display_name('host')}】章节研判完成 章节={section_judgement.section_key}")
         return {
             "section_pair_store": state["section_pair_store"],
             "judgements": judgements,

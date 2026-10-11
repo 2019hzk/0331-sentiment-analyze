@@ -37,7 +37,7 @@ class TaskManager:
     def get_research_task(self, task_id: str) -> ResearchTaskInfo:
         return self.research_tasks[task_id]
 
-    def submit_task(self, coro: Coroutine):
+    def create_background_task(self, coro: Coroutine):
         # 1. 创建异步任务(协程对象)----->一个事件循环线程并发执行两个协程任务
         task = asyncio.create_task(coro)
         # 2. 存储异步任务

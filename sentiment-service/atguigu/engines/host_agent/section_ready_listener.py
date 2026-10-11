@@ -10,7 +10,7 @@ from atguigu.engines.contract.events import (
     unsubscribe
 )
 from atguigu.engines.common.task_manager import task_manager
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import get_role_display_name
 from atguigu.engines.host_agent.graph import build_graph
 from atguigu.engines.host_agent.section_judge import HostSectionJudge
 from atguigu.engines.host_agent.section_pair_store import SectionPairStore
@@ -30,7 +30,7 @@ class SectionReadyListener:
         """订阅章节就绪事件并启动消费任务"""
         self._event_queue = asyncio.Queue()
         subscribe(EventType.SECTION_READY, self._enqueue_event)
-        task_manager.submit_task(self._process_events())
+        task_manager.create_background_task(self._process_events())
         logger.info("SectionReadyListener: 已启动 Host 章节研判")
 
     def stop(self):
@@ -80,8 +80,8 @@ class SectionReadyListener:
             # ==================
             for discussion_event in discussion_events:
                 logger.info(
-                    f"【{display_agent_name('host')}】发送讨论事件 "
-                    f"来源={display_agent_name(discussion_event.source)} "
+                    f"【{get_role_display_name('host')}】发送讨论事件 "
+                    f"来源={get_role_display_name(discussion_event.source)} "
                     f"章节={discussion_event.section_key} "
                     f"内容={discussion_event.content[:20]}..."
                 )

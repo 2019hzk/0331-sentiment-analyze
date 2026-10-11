@@ -1,6 +1,6 @@
 from typing import Any, Mapping
 from atguigu.engines.common.research_graph_runtime import ResearchNode
-from atguigu.engines.contract.agent_role import display_agent_name
+from atguigu.engines.contract.agent_role import get_role_display_name
 from atguigu.engines.contract.evidence import EvidenceRecord
 from atguigu.engines.contract.research_graph_state import SectionState
 from atguigu.engines.contract.section_definitions import SECTION_DEFINITIONS
@@ -12,7 +12,7 @@ class SectionPreparationNode(ResearchNode):
 
     async def __call__(self, state: InsightState) -> dict[str, Any]:
         """生成固定章节状态及供摘要节点消费的章节证据列表"""
-        agent_name = display_agent_name(self.context.role)
+        agent_name = get_role_display_name(self.context.role)
         self.context.report_progress("planning", f"{agent_name} 开始固定章节与证据准备", 30)
 
         records_by_id = state.get("records_by_id")
